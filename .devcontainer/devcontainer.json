@@ -1,0 +1,29 @@
+{
+    "name": "project-dev",
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "task-list",
+    "workspaceFolder": "/app",
+    "postCreateCommand" : "cd ./TaskList.Web/Client && npm install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp", 
+                "fudge.auto-using",
+                "formulahendry.dotnet-test-explorer",
+                "josefpihrt-vscode.roslynator",
+                "dbaeumer.vscode-eslint", 
+                "esbenp.prettier-vscode",
+                "streetsidesoftware.code-spell-checker",
+                "PKief.material-icon-theme"
+            ],
+            "settings": {
+                "files.eol": "\r\n",
+                "remote.extensionKind": {
+                    "ms-azuretools.vscode-docker": "workspace"
+                }
+            }
+        }
+    }
+}

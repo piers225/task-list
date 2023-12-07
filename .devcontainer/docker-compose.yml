@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+    task-list:
+      build: 
+        context: .
+        dockerfile: DockerFile
+      ports:
+        - "5179:5179"
+        - "3000:3000"
+      volumes:
+        - ../:/app
+      environment:
+        - TZ=UTC
+      tty: true
+      env_file:
+         - .env
