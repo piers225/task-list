@@ -29,7 +29,7 @@ describe('<TaskList />', () => {
 
   it('Should make a request to get items', () => {
     render(<TaskList />);
-    expect(open).toHaveBeenCalledWith('GET', '/api/get-task-lists', true)
+    expect(open).toHaveBeenCalledWith('GET', '/api/tasks', true)
   });
 
   it('Clicking add button and returning `test Value` calls the create end point', () => {
@@ -38,6 +38,6 @@ describe('<TaskList />', () => {
     render(<TaskList />);
     const addButton = screen.getByTestId('add-button');
     fireEvent.click(addButton);
-    expect(open).toHaveBeenCalledWith('POST', '/api/create-pending-task', true)
+    expect(open).toHaveBeenCalledWith('POST', '/api/tasks', true)
   });
 });

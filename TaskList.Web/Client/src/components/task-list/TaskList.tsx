@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './tasklist.css'
 import TaskListItems from './item-list/TaskListItems';
-import { Api, TaskItemDDL } from '../../api/Api';
+import { TaskItemDDL } from '../../api/Api';
 import useApi from '../../api/useApi';
 
 export default function TaskList() {
@@ -11,7 +11,7 @@ export default function TaskList() {
     const { client } = useApi()
 
     const getTasks = async() => {
-        const { data } = await client.api.getTaskListsList()
+        const { data } = await client.api.tasksList()
         setPendingTasks(data.filter(f => f.status === 'Pending'))
         setCompletedTasks(data.filter(f => f.status === 'Completed'))
     }
@@ -21,18 +21,22 @@ export default function TaskList() {
         if (!taskName) {
             return;
         }
-        await client.api.createPendingTaskCreate({ 
+        await client.api.tasksCreate({
+            id : 0, 
+            status: 'Pending',
             name : taskName
         });
         await getTasks();
     }
 
-    const movePending = async(taskId : number) => {
-        await client.api.updateTaskStatusPendingUpdate({ taskId })
+    const movePending = async(task : TaskItemDDL) => {
+        task.status = 'Pending'
+        await client.api.tasksUpdate(task.id!.toString(), { taskId : task.id! }, task)
         await getTasks()
     }
-    const moveActioned = async(taskId : number) => {
-        await client.api.updateTaskStatusCompleteUpdate({ taskId })
+    const moveActioned = async(task : TaskItemDDL) => {
+        task.status = 'Completed'
+        await client.api.tasksUpdate(task.id!.toString(), { taskId : task.id! }, task)
         await getTasks()
     }
 
@@ -50,11 +54,11 @@ export default function TaskList() {
             </div>
             <hr />
             <h2>Pending Tasks</h2>
-            <TaskListItems onclick={(taskId : number) => moveActioned(taskId)} taskItems={pendingTasks} />          
+            <TaskListItems onclick={moveActioned} taskItems={pendingTasks} />          
             { pendingTasks.length === 0 && <i data-testid="noPendingMessages">None</i> }
 
             <h2>Completed Tasks</h2>
-            <TaskListItems onclick={(taskId : number) => movePending(taskId)} taskItems={completedTasks} />
+            <TaskListItems onclick={movePending} taskItems={completedTasks} />
             { completedTasks.length === 0 && <i data-testid="noCompletedMessages">None</i> }
         
         </div>

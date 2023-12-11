@@ -6,9 +6,8 @@ public interface ITaskListService
 {
     Task<TaskItemDDL[]> GetTaskItems(int userId);
 
-    Task AddPendingTaskItem(int userId, string taskDescription);
+    Task AddTaskItem(int userId, TaskItemDDL taskItemDDL);
 
-    Task SetItemStatusToPending(int userId, int taskItemId) ;
+    Task UpdateTaskItem(int userId, int taskId, TaskItemDDL taskItemDDL);
 
-    Task SetItemStatusToComplete(int userId, int taskItemId);
 }

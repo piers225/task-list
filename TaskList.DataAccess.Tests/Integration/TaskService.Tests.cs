@@ -73,7 +73,11 @@ public class TaskServiceTests
     {
         var taskItemName = fixture.Create<string>();
 
-        await taskListService.AddPendingTaskItem(1, taskItemName);
+        await taskListService.AddTaskItem(1, new Models.TaskItemDDL() {
+            Id = 0,
+            Name = taskItemName,
+            Status = TaskItemStatus.Pending.ToString()
+        });
 
         var savedTaskItem = dbContext.TaskItems.Single();
 
@@ -91,7 +95,11 @@ public class TaskServiceTests
         dbContext.TaskItems.Add(taskItem);
         dbContext.SaveChanges();
         
-        await taskListService.SetItemStatusToPending(taskItem.UserId, taskItem.Id);
+        await taskListService.UpdateTaskItem(taskItem.UserId, taskItem.Id, new Models.TaskItemDDL() {
+            Id = taskItem.Id,
+            Name = taskItem.Name,
+            Status = TaskItemStatus.Pending.ToString()
+        });
 
         Assert.AreEqual(taskItem.Status, TaskItemStatus.Pending);
     }
@@ -105,7 +113,11 @@ public class TaskServiceTests
         dbContext.TaskItems.Add(taskItem);
         dbContext.SaveChanges();
         
-        await taskListService.SetItemStatusToComplete(taskItem.UserId, taskItem.Id);
+        await taskListService.UpdateTaskItem(taskItem.UserId, taskItem.Id, new Models.TaskItemDDL() {
+            Id = taskItem.Id,
+            Name = taskItem.Name,
+            Status = TaskItemStatus.Completed.ToString()
+        });
 
         Assert.AreEqual(taskItem.Status, TaskItemStatus.Completed);
     }

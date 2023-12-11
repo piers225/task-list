@@ -9,11 +9,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface CreateTaskItem {
-  /** @minLength 1 */
-  name: string;
-}
-
 export interface LoginRequest {
   email?: string;
   password?: string;
@@ -267,12 +262,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags TaskList.Api
-     * @name GetTaskListsList
-     * @request GET:/api/get-task-lists
+     * @name TasksList
+     * @request GET:/api/tasks
      */
-    getTaskListsList: (params: RequestParams = {}) =>
+    tasksList: (params: RequestParams = {}) =>
       this.request<TaskItemDDL[], any>({
-        path: `/api/get-task-lists`,
+        path: `/api/tasks`,
         method: "GET",
         format: "json",
         ...params,
@@ -282,12 +277,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags TaskList.Api
-     * @name CreatePendingTaskCreate
-     * @request POST:/api/create-pending-task
+     * @name TasksCreate
+     * @request POST:/api/tasks
      */
-    createPendingTaskCreate: (data: CreateTaskItem, params: RequestParams = {}) =>
+    tasksCreate: (data: TaskItemDDL, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/api/create-pending-task`,
+        path: `/api/tasks`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -298,41 +293,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags TaskList.Api
-     * @name UpdateTaskStatusPendingUpdate
-     * @request PUT:/api/update-task-status-pending
+     * @name TasksUpdate
+     * @request PUT:/api/tasks/{taskId}
      */
-    updateTaskStatusPendingUpdate: (
+    tasksUpdate: (
+      taskId: string,
       query: {
         /** @format int32 */
         taskId: number;
       },
+      data: TaskItemDDL,
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/api/update-task-status-pending`,
+        path: `/api/tasks/${taskId}`,
         method: "PUT",
         query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags TaskList.Api
-     * @name UpdateTaskStatusCompleteUpdate
-     * @request PUT:/api/update-task-status-complete
-     */
-    updateTaskStatusCompleteUpdate: (
-      query: {
-        /** @format int32 */
-        taskId: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/update-task-status-complete`,
-        method: "PUT",
-        query: query,
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
   };

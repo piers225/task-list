@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using TaskList.DataAccess;
 using TaskList.DataAccess.DataContext.Seeder;
 using TaskList.DataAccess.Service;
-using TaskList.Api.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TaskList.DataAccess.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder().AddEnvironmentVariables().Build();
@@ -54,10 +54,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/api/get-task-lists", [Authorize] (ITaskListService taskListService) => taskListService.GetTaskItems(1));
-app.MapPost("/api/create-pending-task", [Authorize] (ITaskListService taskListService, [FromBody] CreateTaskItem createTaskItem) => taskListService.AddPendingTaskItem(1, createTaskItem.Name));
-app.MapPut("/api/update-task-status-pending", [Authorize]  (ITaskListService taskListService, [FromQuery] int taskId)  => taskListService.SetItemStatusToPending(1, taskId));
-app.MapPut("/api/update-task-status-complete", [Authorize]  (ITaskListService taskListService, [FromQuery] int taskId)  => taskListService.SetItemStatusToComplete(1, taskId));
+app.MapGet("/api/tasks", [Authorize] (ITaskListService taskListService) => taskListService.GetTaskItems(1));
+app.MapPost("/api/tasks", [Authorize] (ITaskListService taskListService, [FromBody] TaskItemDDL taskItem) => taskListService.AddTaskItem(1, taskItem));
+app.MapPut("/api/tasks/{taskId:int}", [Authorize]  (ITaskListService taskListService, [FromQuery] int taskId, [FromBody] TaskItemDDL taskItem )  => taskListService.UpdateTaskItem(1, taskId, taskItem));
 
 app.MapWhen(x => !x.Request.Path.Value.StartsWith("/api"), builder =>
 {

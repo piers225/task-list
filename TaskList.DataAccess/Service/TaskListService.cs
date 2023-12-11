@@ -18,7 +18,6 @@ internal class TaskListService : ITaskListService {
     public async Task<TaskItemDDL[]> GetTaskItems(int userId) 
     {
         var tasks = await this._taskItemRepository.Where(taskItem => taskItem.User.Id == userId);
-
         return tasks.Select(s => new TaskItemDDL{
             Id = s.Id,
             Name = s.Name,
@@ -26,28 +25,21 @@ internal class TaskListService : ITaskListService {
         }).ToArray();
     }
 
-    public async Task AddPendingTaskItem(int userId, string taskDescription) {
+    public async Task AddTaskItem(int userId, TaskItemDDL taskItemDDL)
+    {
         var user = await this._userRepository.FindOne(f => f.Id == userId);
         this._taskItemRepository.Add(new TaskItem() {
             User = user,
-            Name = taskDescription,
+            Name = taskItemDDL.Name,
             Status= TaskItemStatus.Pending
         });
         await this._taskItemRepository.SaveChanges();
     }
 
-    public async Task SetItemStatusToPending(int userId, int taskItemId) 
+    public async Task UpdateTaskItem(int userId, int taskId, TaskItemDDL taskItemDDL)
     {
-        var taskItem =  await this._taskItemRepository.FindOne(taskItem => taskItem.User.Id == userId && taskItem.Id == taskItemId);
-        taskItem.Status = TaskItemStatus.Pending;
+        var taskItem = await this._taskItemRepository.FindOne(f => f.Id == taskId);
+        taskItem.Status = Enum.Parse<TaskItemStatus>(taskItemDDL.Status);
         await this._taskItemRepository.SaveChanges();
     }
-
-    public async Task SetItemStatusToComplete(int userId, int taskItemId) 
-    {
-        var taskItem =  await this._taskItemRepository.FindOne(taskItem => taskItem.User.Id == userId && taskItem.Id == taskItemId);
-        taskItem.Status = TaskItemStatus.Completed;
-        await this._taskItemRepository.SaveChanges();
-    }
-
 } 
