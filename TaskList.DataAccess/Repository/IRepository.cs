@@ -6,10 +6,10 @@ namespace TaskList.DataAccess.Repository;
 internal interface IRepository<TEntity> 
     where TEntity : class
 {
-    public Task<TEntity?> FindOneOrNone(Expression<Func<TEntity, bool>> predicate);
-
-    public Task<TEntity> FindOne(Expression<Func<TEntity, bool>> predicate);
-
+    public Task<TEntity?> FindOneOrNone(int id);
+    
+    public Task<TEntity> FindOne(int id);
+    
     public Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
 
     public Task<TEntity[]> Where(Expression<Func<TEntity, bool>> predicate);

@@ -16,14 +16,15 @@ internal class Repository<TEntity> : IRepository<TEntity>
         this.dbContext = dbContext;
     }
 
-    public Task<TEntity?> FindOneOrNone(Expression<Func<TEntity, bool>> predicate) 
+    public async Task<TEntity?> FindOneOrNone(int id) 
     {
-        return this.dbContext.Set<TEntity>().SingleOrDefaultAsync(predicate);
+        return await this.dbContext.Set<TEntity>().FindAsync(id);
     }
 
-    public Task<TEntity> FindOne(Expression<Func<TEntity, bool>> predicate) 
+    public async Task<TEntity> FindOne(int id) 
     {
-        return this.dbContext.Set<TEntity>().SingleAsync(predicate);
+        return await this.dbContext.Set<TEntity>().FindAsync(id) 
+            ?? throw new ArgumentException($"Id : {id}, not found for Table: {typeof(TEntity).Name}");
     }
 
     public Task<bool> Any(Expression<Func<TEntity, bool>> predicate) 

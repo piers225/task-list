@@ -27,7 +27,7 @@ internal class TaskListService : ITaskListService {
 
     public async Task AddTaskItem(int userId, TaskItemDDL taskItemDDL)
     {
-        var user = await this._userRepository.FindOne(f => f.Id == userId);
+        var user = await this._userRepository.FindOne(userId);
         this._taskItemRepository.Add(new TaskItem() {
             User = user,
             Name = taskItemDDL.Name,
@@ -38,7 +38,7 @@ internal class TaskListService : ITaskListService {
 
     public async Task UpdateTaskItem(int userId, int taskId, TaskItemDDL taskItemDDL)
     {
-        var taskItem = await this._taskItemRepository.FindOne(f => f.Id == taskId);
+        var taskItem = await this._taskItemRepository.FindOne(taskId);
         taskItem.Status = Enum.Parse<TaskItemStatus>(taskItemDDL.Status);
         await this._taskItemRepository.SaveChanges();
     }
